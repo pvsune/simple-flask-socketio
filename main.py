@@ -18,7 +18,7 @@ class MyCustomNamespace(Namespace):
         print('Client disconnected')
 
     def on_my_event(self, message):
-        emit('my_response', {'data': self.room})
+        emit('my_response', {'data': message['data']})
 
     def on_my_broadcast_event(self, message):
         emit('my_response', {'data': message['data']}, broadcast=True)
