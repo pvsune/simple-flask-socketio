@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from flask_socketio import SocketIO, send, emit
+from flask_socketio import SocketIO, emit, Namespace
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -12,24 +12,24 @@ def index():
 
 @app.route('/cb')
 def cb():
-   socketio.emit('my response', {'data': 42}, namespace='/test')
+   socketio.emit('my_response', {'data': 42}, namespace='/test')
    return '200 OK'
 
-@socketio.on('my event', namespace='/test')
-def test_message(message):
-    emit('my response', {'data': message['data']})
 
-@socketio.on('my broadcast event', namespace='/test')
-def test_message(message):
-    emit('my response', {'data': message['data']}, broadcast=True)
+class MyCustomNamespace(Namespace):
+    def on_connect(self):
+        emit('my_response', {'data': 'Connected'})
 
-@socketio.on('connect', namespace='/test')
-def test_connect():
-    emit('my response', {'data': 'Connected'})
+    def on_disconnect(self):
+        print('Client disconnected')
 
-@socketio.on('disconnect', namespace='/test')
-def test_disconnect():
-    print('Client disconnected')
+    def on_my_event(self, message):
+        emit('my_response', {'data': message['data']})
+
+    def on_my_broadcast_event(self, message):
+        emit('my_response', {'data': message['data']}, broadcast=True)
+
+socketio.on_namespace(MyCustomNamespace('/test'))
 
 
 if __name__ == '__main__':
