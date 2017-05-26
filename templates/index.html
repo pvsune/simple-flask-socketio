@@ -2,6 +2,12 @@
 <html>
 <head>
     <title>Flask-SocketIO Test</title>
+    <style type="text/css">
+        div.scroll {
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+    </style>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
 </head>
@@ -19,7 +25,7 @@
     </form>
 
     <h2>Receive:</h2>
-    <div id="log"></div>
+    <div id="log" class="scroll"></div>
 
     <script>
         $(document).ready(function(){
